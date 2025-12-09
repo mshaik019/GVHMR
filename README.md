@@ -1,282 +1,282 @@
-Generative Video Human Mesh Recovery (GVHMR)
 
-This repository contains the full implementation of Generative Video Human Mesh Recovery (GVHMR) — a complete video-to-3D mesh reconstruction pipeline that generates temporally consistent human meshes from standard RGB input videos. Unlike per-frame pose estimation approaches that produce jittery outputs, this project reconstructs a smooth, coherent 3D motion sequence and exports results in SMPL-X format for downstream applications.
 
-This project was implemented with reference to the SIGGRAPH Asia 2024 paper
-“World-Grounded Human Motion Recovery via Gravity-View Coordinates (GVHMR)” by Shen et al.
+# **Generative Video Human Mesh Recovery (GVHMR)**
+
+This repository contains the full implementation of **Generative Video Human Mesh Recovery (GVHMR)** — a complete video-to-3D mesh reconstruction pipeline that generates **temporally consistent human meshes** from standard RGB input videos. Unlike per-frame pose estimation approaches that produce jittery outputs, this project reconstructs a **smooth, coherent 3D motion sequence** and exports results in **SMPL-X format** for downstream applications.
+
+This project was implemented with reference to the **SIGGRAPH Asia 2024 paper**
+**“World-Grounded Human Motion Recovery via Gravity-View Coordinates (GVHMR)”** by Shen et al.
 This README summarizes the full pipeline, architecture, techniques, datasets, implementation details, deployment challenges, and final deliverables.
 
-Team Members
+---
 
-Mohammad Adil Shaik
+## **Team Members**
 
-Vamsi Aakash Samudrala
+* **Mohammad Adil Shaik**
+* **Vamsi Aakash Samudrala**
+* **Sai Vishnu Sathwik Gurijala**
+* **Harshith Reddy Pasham**
+* **Rohan Siddharth Gudla**
 
-Sai Vishnu Sathwik Gurijala
+---
 
-Harshith Reddy Pasham
+## **Abstract**
 
-Rohan Siddharth Gudla
+We implemented GVHMR, an end-to-end framework that reconstructs a **temporally consistent sequence of 3D human meshes** from monocular RGB video. The goal was to overcome limitations of traditional per-frame prediction methods — which often suffer from jitter, drift, and incomplete geometry — to produce **smooth, realistic 3D motion** while preserving full-body shape. We generated mesh-overlaid videos for visual validation and exported SMPL-X mesh outputs for downstream usage.
 
-Abstract
+---
 
-We implemented GVHMR, an end-to-end framework that reconstructs a temporally consistent sequence of 3D human meshes from monocular RGB video. The goal was to overcome limitations of traditional per-frame prediction methods — which often suffer from jitter, drift, and incomplete geometry — to produce smooth, realistic 3D motion while preserving full-body shape. We generated mesh-overlaid videos for visual validation and exported SMPL-X mesh outputs for downstream usage.
-
-1. Introduction
+# **1. Introduction**
 
 Reconstructing full-body 3D motion from monocular video is challenging due to:
 
-Occlusions
-
-Motion blur
-
-Camera movement
-
-Lighting variations
-
-Depth ambiguity
+* Occlusions
+* Motion blur
+* Camera movement
+* Lighting variations
+* Depth ambiguity
 
 Traditional frame-by-frame reconstruction lacks temporal coherence and often generates unstable mesh predictions.
-To overcome this, we built a pipeline inspired by GVHMR that ensures:
 
-Smooth temporal consistency
+Our GVHMR-based pipeline ensures:
 
-Dense, complete mesh geometry
+* **Smooth temporal consistency**
+* **Dense, complete mesh geometry**
+* **Accurate global trajectories**
+* **Support for videos up to 5GB**
 
-Accurate global trajectories
+---
 
-Support for large videos (up to 5 GB)
+# **2. Problem Statement**
 
-2. Problem Statement
+Given a single RGB video, reconstruct a **full-body 3D mesh sequence** parameterized in **SMPL-X** such that:
 
-Given a single RGB video, reconstruct a full-body 3D mesh sequence parameterized in SMPL-X such that:
+* Motion is smooth and continuous
+* Geometry remains stable even under occlusions or blur
+* Global translation and rotation are accurate
+* Output meshes are temporally consistent
 
-Motion is smooth and continuous
+**Key challenges:**
 
-Geometry remains stable under occlusions or blur
+* Fast motion & occlusion
+* Camera shaking
+* Lighting variation
+* Extremely large input videos
 
-Global translation and rotation are accurate
+---
 
-Output meshes are temporally consistent
+# **3. What We Built**
 
-Challenges include:
+Our GVHMR-based system performs:
 
-Fast motion and occlusion
+* Frame-wise feature extraction
+* Initial per-frame 3D mesh reconstruction
+* Transformer-based temporal smoothing
+* SMPL-X export
+* Mesh-overlay video rendering
 
-Camera shaking or poor lighting
+This creates a fully functional reconstruction pipeline for **VR/AR, graphics, animation, and research**.
 
-Depth ambiguity
+---
 
-Extremely large video inputs
+# **4. End-to-End Pipeline**
 
-3. What We Built
+1. **Video Input**
+2. **Feature Extraction**
+3. **Per-Frame Mesh Reconstruction**
+4. **Temporal Generative Modeling**
+5. **Gravity-View Coordinate Mapping**
+6. **SMPL-X Mesh Conversion**
+7. **Rendering & Overlay Video Generation**
 
-We implemented a complete GVHMR-based system capable of:
+---
 
-Extracting frame-wise features
+# **5. Architecture Overview**
 
-Performing initial 3D mesh reconstruction
+The architecture includes:
 
-Applying transformer-based temporal modeling
+* Early fusion of multi-modal tokens
+* Temporal transformer layers
+* Multitask MLP prediction heads
+* Gravity-View coordinate transformation
+* Root trajectory estimation
+* Dense 3D mesh decoding
+* SMPL-X output conversion
 
-Converting outputs into SMPL-X format
+---
 
-Rendering mesh-overlay videos for evaluation
+# **6. Key Techniques**
 
-This creates a fully functional 3D motion reconstruction pipeline suitable for animation, VR/AR, biomechanics, simulation, and research.
+* **Temporal Generative Modeling**
+* **Volumetric Mesh Reconstruction**
+* **SMPL-X Parameterization**
+* **Neural Rendering for mesh overlays**
 
-4. End-to-End Pipeline
+---
 
-Video Input
+# **7. Data & Input Setup**
 
-Feature Extraction (Pose, Visual Tokens)
+We tested using:
 
-Per-Frame Mesh Reconstruction
+### **Public dataset**
 
-Temporal Generative Modeling (Transformers)
+* 3DPW (outdoor real-world sequences)
 
-Gravity-View Coordinate Mapping
+### **Custom videos (~5GB each)**
 
-SMPL-X Mesh Conversion
+Indoor + outdoor motion videos.
 
-Rendering & Mesh Overlay Video Generation
+---
 
-5. Architecture Overview
+## 🔗 **Input Folder Download Link**
 
-Our implementation mirrors the GVHMR architecture:
+Because of repository size limits, all input videos + checkpoints are hosted on Google Drive:
 
-Early fusion of multi-modal tokens
+👉 **Download Inputs & Checkpoints:**
+[https://drive.google.com/drive/folders/1IonJr1S4dyqp0VGj-VlpfV0i_w0XQlwx?usp=sharing](https://drive.google.com/drive/folders/1IonJr1S4dyqp0VGj-VlpfV0i_w0XQlwx?usp=sharing)
 
-Temporal transformer layers with relative positional encoding
+---
 
-Multitask MLP prediction heads
+## **📁 Input Files & Checkpoints Setup**
 
-Gravity-View coordinate transformation
+Place the downloaded folder inside:
 
-Root trajectory estimation
-
-Dense 3D mesh decoding
-
-SMPL-X output conversion
-
-6. Key Techniques
-
-Temporal Generative Modeling for long-range motion smoothing
-
-Volumetric Mesh Reconstruction for robust geometry
-
-SMPL-X Parameterization for standardized human modeling
-
-Neural Rendering & Overlay Visualization for evaluation
-
-7. Data & Dataset Usage
-• Public Dataset
-
-3DPW for outdoor, real-world evaluation
-
-• Custom Large Videos (~5 GB each)
-
-Collected under varied indoor/outdoor environments.
-
-🔗 Input Folder Download Link
-
-Due to size limitations, input videos and checkpoints are stored externally:
-
-👉 Google Drive (Inputs + Checkpoints):
-https://drive.google.com/drive/folders/1IonJr1S4dyqp0VGj-VlpfV0i_w0XQlwx?usp=sharing
-
-📁 Input Files and Checkpoints Setup
-
-Download the folder and place it inside:
-
+```
 GVHMR/inputs/
+```
 
-1️⃣ Input Videos (.mp4)
+### **1️⃣ Input Videos (.mp4)**
 
-Place video files in:
+Examples:
 
-GVHMR/inputs/
-
-
-Example:
-
+```
 GVHMR/inputs/tennis.mp4
 GVHMR/inputs/jumping.mp4
 GVHMR/inputs/demo1.mp4
+```
 
-2️⃣ Model Checkpoints
+### **2️⃣ Checkpoints**
 
 Place pretrained weights here:
 
+```
 GVHMR/inputs/checkpoints/
 GVHMR/inputs/ckpts/
+```
 
-✔️ Final Folder Structure Must Look Like
+---
+
+## ✔️ **Correct Final Folder Structure**
+
+```
 GVHMR/
 ├── docs/
 ├── hmr4d/
 ├── tools/
 ├── third-party/
-├── README.md
 ├── GVHMR.ipynb
+├── README.md
 └── inputs/
       ├── tennis.mp4
       ├── walking.mp4
       ├── demo1.mp4
       ├── checkpoints/
       └── ckpts/
+```
 
-Set the Video Path in Notebook
+### **Set video path in notebook:**
+
+```python
 VIDEO_PATH = "/content/GVHMR/inputs/tennis.mp4"
+```
 
-8. Implementation & Deployment Challenges
+---
 
-CUDA & PyTorch version conflicts
+# **8. Implementation & Deployment Challenges**
 
-GPU memory limits
+* CUDA + PyTorch mismatches
+* GPU memory limitations
+* Path inconsistencies
+* Dependency conflicts
 
-Path inconsistencies
+All resolved in **GVHMR.ipynb**.
 
-Dependency conflicts requiring pinned versions
+---
 
-✔ All issues have been resolved inside GVHMR.ipynb.
+# **📄 Direct Notebook (Colab Link)**
 
-📄 Direct Notebook Access (GVHMR.ipynb)
+Open the full runnable notebook here:
 
-For easier execution and proof of results:
+👉 [https://colab.research.google.com/drive/1lG-S4v5tkoHNOg-OpI_-M8Ma3-yLHFDu?usp=sharing](https://colab.research.google.com/drive/1lG-S4v5tkoHNOg-OpI_-M8Ma3-yLHFDu?usp=sharing)
 
-🔗 Google Colab Notebook:
-https://colab.research.google.com/drive/1lG-S4v5tkoHNOg-OpI_-M8Ma3-yLHFDu?usp=sharing
+---
 
-9. How to Run (Using Google Colab)
+# **9. How to Run (Colab)**
 
-Open GVHMR.ipynb in Colab
+1. Open notebook in Colab
+2. Enable **GPU** runtime
+3. Upload or mount the GVHMR folder
+4. Ensure `inputs/` contains videos & checkpoints
+5. Set video path
+6. Run all cells
+7. Outputs appear in:
 
-Switch runtime to GPU
-
-Upload or mount the GVHMR/ folder
-
-Ensure inputs/ contains videos & checkpoints
-
-Set video path:
-
-VIDEO_PATH = "/content/GVHMR/inputs/your_video.mp4"
-
-
-Run all cells
-
-Output files appear in:
-
+```
 outputs/
+```
 
-10. Project Folder Structure
+---
+
+# **10. Folder Structure**
+
+```
 GVHMR/
-│
 ├── GVHMR.ipynb
 ├── preprocess/
 ├── scripts/
 ├── outputs/
 ├── sample_data/
 └── README.md
+```
 
-11. Deliverables
+---
 
-Mesh-overlay videos
+# **11. Deliverables**
 
-SMPL-X mesh exports
+* Mesh-overlay output videos
+* SMPL-X mesh exports
+* Fully runnable Colab notebook
+* GVHMR.zip code
+* Dataset download link
+* Complete documentation
 
-Full runnable notebook
+---
 
-GVHMR.zip source code
+# **12. Reference**
 
-Input dataset (Google Drive link)
-
-Complete documentation (README.md)
-
-12. Reference to Original Paper
+```bibtex
 @inproceedings{shen2024gvhmr,
 title = {World-Grounded Human Motion Recovery via Gravity-View Coordinates},
 author = {Shen, Zehong and Pi, Huaijin and Xia, Yan and Cen, Zhi and Peng, Sida and Hu, Zechen and Bao, Hujun and Hu, Ruizhen and Zhou, Xiaowei},
 booktitle = {SIGGRAPH Asia Conference Proceedings},
 year = {2024}
 }
+```
 
-13. Acknowledgements
+---
 
-We gratefully acknowledge the authors of:
+# **13. Acknowledgements**
 
-GVHMR
+* GVHMR
+* WHAM
+* 4D-Humans
+* ViTPose-Pytorch
 
-WHAM
+---
 
-4D-Humans
+# **Contact**
 
-ViTPose-Pytorch
+📧 **[mshaik10@charlotte.edu](mailto:mshaik10@charlotte.edu)**
+👤 **Team Lead: Mohammad Adil Shaik**
 
-Their open-source contributions formed the backbone of this project.
-
-Contact
-
-📧 Email: mshaik10@charlotte.edu
-
-👤 Team Lead: Mohammad Adil Shaik
+---
